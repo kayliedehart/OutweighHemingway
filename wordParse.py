@@ -1,46 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from nltk.tokenize import treebank
+import tweepyFunctions
+from nltk.tag import pos_tag  
 
-from dependencies import nltk, wn, lesk, RegexpTokenizer
-
-# tokenizes strings in corpus files
-# currently unused!!!
-
-
-WORD = "\w+[\'-]?\w*"
-PRICE = "\$[\d.]+"
-PUNCTUATION_EXCEPT_HYPHEN = '[' + punctuation.replace('-', '') + ']'
-REGEX = "|".join([WORD, PRICE, PUNCTUATION_EXCEPT_HYPHEN])
-
-dickens = 'data/dickens.txt'
-hemingway = 'data/hemingway.txt'
-rappers = 'data/rappers.txt'
-shakespeare = 'data/shakespeare.txt'
-
-dickens_out = 'data/dickens_corpus.txt'
-hemingway_out = 'data/hemingway_corpus.txt'
-rappers_out = 'data/rappers_out.txt'
-shakespeare_out = 'data/shakespeare_corpus.txt'
-
-corpus_in = [dickens, hemingway, shakespeare]
-corpus_out = [dickens_out, hemingway_out, shakespeare_out]
+import nltk
+nltk.download('punkt')
+nltk.download('maxent_treebank_pos_tagger')
 
 
-def tokenize_string(line):
-	tokenizer = RegexpTokenizer(REGEX)
-	return tokenizer.tokenize(line)
+#tokenize by spaces
+def TokenMaker(tweets):
+	tokens = []
+	for tweet in tweets:
+		print tweet
+		x = tweet.split(" ")
+		tokens.append(x)
+	print tokens
+	#part of speech analysis (for each token in sentence)
+	##TAKES tokens (list(str))
+	#RETURNS list(tuple(str, str)) tagged
+	tagged = []
+	for t in tokens:
+		temp = pos_tag(t)
+		tagged.append(temp)
+		print tagged 
+	return tagged
 
-def build_corpus():
-	"""
-	Tokenize an input file to use for a corpus
-	Saves the output file to the data folder
-	"""
-	for i in range(len(corpus_in)) :
-		inf = corpus_in[i]
-		outf = corpus_out[i]
-		with open(inf, 'r') as infile, open(outf, 'w') as outfile:
-			for line in infile:
-				line = line.replace("'", '')
-				outfile.write(" ".join(tokenize_string(line)) + "\n")
-
-build_corpus()
+first = tweepyFunctions.keywordSearch('dog', 1)[0].text
+print first + "\n"
+print TokenMaker([first])
