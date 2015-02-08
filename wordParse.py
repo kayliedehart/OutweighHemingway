@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-import random
-import nltk
-from pprint import pprint
-from string import punctuation
-from nltk.corpus import wordnet as wn
-from nltk.wsd import lesk
-from nltk.tokenize import RegexpTokenizer
+
+from dependencies import nltk, wn, lesk, RegexpTokenizer
+
+# tokenizes strings in corpus files
+# currently unused!!!
+
 
 WORD = "\w+[\'-]?\w*"
 PRICE = "\$[\d.]+"
@@ -14,10 +13,12 @@ REGEX = "|".join([WORD, PRICE, PUNCTUATION_EXCEPT_HYPHEN])
 
 dickens = 'data/dickens.txt'
 hemingway = 'data/hemingway.txt'
+rappers = 'data/rappers.txt'
 shakespeare = 'data/shakespeare.txt'
 
 dickens_out = 'data/dickens_corpus.txt'
 hemingway_out = 'data/hemingway_corpus.txt'
+rappers_out = 'data/rappers_out.txt'
 shakespeare_out = 'data/shakespeare_corpus.txt'
 
 corpus_in = [dickens, hemingway, shakespeare]

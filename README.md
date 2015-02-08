@@ -1,5 +1,5 @@
 # OutweighHemingway
 A Twitterbot for re-telling short stories
 
-To setup spaCy library and dependencies, run:
+To setup libraries and dependencies, run:
 $ bash setup.bash
