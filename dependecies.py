@@ -4,6 +4,7 @@
 from pprint import pprint
 from string import punctuation as pnct
 import numpy as np
+import time, sys
 
 import nltk
 from nltk.wsd import lesk
