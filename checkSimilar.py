@@ -1,10 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import random
-import nltk
-from nltk.corpus import wordnet as wn
-from nltk.wsd import lesk
-from nltk import word_tokenize as wt
+
+from dependencies import nltk, wn, wt, lesk
 
 SIMILARITY_DEPTH = 1
 

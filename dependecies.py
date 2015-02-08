@@ -1,4 +1,6 @@
-import random
+#!/usr/bin/python
+# -*- coding: utf-8 -*-import random
+
 from pprint import pprint
 from string import punctuation as pnct
 import numpy as np

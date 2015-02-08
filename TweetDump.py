@@ -11,13 +11,22 @@ def keywordSearch(keyword, numResults = 1) :
 def getTextFromTweet(tweet) :
 	return tweet.text
 
-# transforms an array of tweet objects into an array of strings
-def tweetsToStrings(tweets) :
-	strings = []
-	while tweets :
-		strings.append(tweets.pop().text)
-	return strings
+
 
 # pulls Author from tweet object
 def getAuthorFromTweet(tweet) :
 	return tweet.user.screen_name
+
+# pull replied from username
+def repliedFrom(tweet) :
+	return tweet.in_reply_to_screen_name
+
+# is retweet?
+def isRetweet(tweet) :
+	return tweet.retweeted
+
+# is truncated? (we probs don't want truncated twee...)
+def isTruncated(tweet) :
+	return tweet.truncated
+
+
