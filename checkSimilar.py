@@ -33,6 +33,13 @@ def getSimilarWords(synset, numMatches) :
 	return similars
 
 
+def checkSingleSentence(tokenized_sentence) :
+	periods = 0
+	for token in tokenized_sentence :
+		if token == "." :
+			periods += 1
+	return periods < 2
+
 # inputs: a word, its part of speech, and the phrase it occurred in
 # outputs: list of similar synsets
 def getDisambigSimilars(word, pos, phrase) :
@@ -45,17 +52,19 @@ def getSimilarity(w1, w2) :
 	# get Resnik Similarity based on brown
 	return max(w1.res_similarity(w2, brown_ic), w2.res_similarity(w1, brown_ic))
 
-# inputs: candidate sentence list of tokenized words and a keyword to check similarity against
-# outputs: the candidate tokenized sentence with highest similarity value
+# inputs: candidate sentence list of tokenized words and a keyword array to check similarity against
+# outputs: the candidate tweet object with highest similarity value
 
 def getSentenceSimilarity(candidates, keywords) :
 
 	# vector of similarities ( candidates[sentence][similarity of word] )
 	similarityVectors = []
 
-	candidatesText = parser.tokenize(candidates)
+	tokenizedCandidates = [ parser.tokenize(candidate) for candidate in candidates ]
+	for candidate in tokenizedCandidates :
+		
 
-	for sentence in candidatesText :
+	for sentence in tokenizedCandidates :
 		simV = [] # temp array for entry into similarityVectors
 		for word in sentence :
 			simV2 = [] # temp array for sumation entry into simV
@@ -68,8 +77,19 @@ def getSentenceSimilarity(candidates, keywords) :
 	# separate array with the average similarity value of words in each candidate sentence
 	sumVec = [ ( sum(vec) / len(vec) ) for vec in similarityVectors ]
 
-	return sumVec
+	# get index of maximum
+	max_index = 0
+	max_val = 0
+	for index in range(0, len(sumVec)) :
+		val = sumVec[index]
+		if val > max_val :
+			max_val = val
+			max_index = index
 
+	# return tweet obj with max 
+	return candidates[max_index]
 
+# for now just use the most similar
+# later add in sentiment and structure support
 def getBest(candidates, keywords, sentiment) :
-	return
+	return getSentenceSimilarity(candidates, keywords)

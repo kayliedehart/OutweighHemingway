@@ -3,21 +3,27 @@
 
 #Main is executed with a "keyword" argument- the story topic
 from tweepyFunctions import *
-from checkSimilar import checkSimilar, getBest
-import sys, time
+import checkSimilar
+import sys, time, random
 
 kw = sys.argv[1]
+keylist = [kw]
 storyArch = []
-i = 0
 
 ######Story Beginning logic
 #One Tweet: pull in tweet
 first = keywordSearch(kw, 1)[0]
 #update story
 storyArch.append(first)
-i++
-#send keyword to checkSimilar for comparison
-checkSimilar()
+
+string = parser.tokenize(first.text)
+for noun in getNouns(string) :
+	keylist.append(noun)
+
+
+## add similar words to shopping list
+# for sim in getSimilarWords(kw, 5) :
+# 	keylist.append(sim.name)
 
 ######Intermediate tweets
 for i in range (1,10) :
@@ -25,20 +31,20 @@ for i in range (1,10) :
 
 	if (i < 4):
 		#The "Choose Your Own Adventure" Phase: Choose Three
-		candidateTweets = keywordSearch(kw, 20)
-		thisTweet = getBest(candidates = candidateTweets, keywords=[kw], sentiment='neutral') # getBest will use tokenizer functions
+		candidateTweets = checkSimilar.keywordSearch(keylist[random.randint(0, len(keylist) - 1)], 20)
+		thisTweet = checkSimilar.getBest(candidates = candidateTweets, keywords=[kw], sentiment='neutral') # getBest will use tokenizer functions
 
 	else if (i < 6) :
 		##Conflict
 		#Limit to "Negative" tweets: Two
-		candidateTweets = keywordSearch(kw, 20)
-		thisTweet = getBest(candidates = candidateTweets, keywords=[kw], sentiment='negative') # getBest will use tokenizer functions
+		candidateTweets = checkSimilar.keywordSearch(keylist.pop(random.randint(0, len(keylist) - 1)), 20)
+		thisTweet = checkSimilar.getBest(candidates = candidateTweets, keywords=[kw], sentiment='negative') # getBest will use tokenizer functions
 
 	else :
 		##Resolution
 		#Limit to "Positive" tweets: Two
-		candidateTweets = keywordSearch(kw, 20)
-		thisTweet = getBest(candidates = candidateTweets, keywords=[kw], sentiment='positive') # getBest will use tokenizer functions
+		candidateTweets = checkSimilar.keywordSearch(keylist.pop(random.randint(0, len(keylist) - 1)), 20)
+		thisTweet = checkSimilar.getBest(candidates = candidateTweets, keywords=[kw], sentiment='positive') # getBest will use tokenizer functions
 
 	storyArch.append(thisTweet)
 	# story words
@@ -50,5 +56,5 @@ for tweetObj in storyArch :
 	wait(1200)
 
 #######Story ending tweet
-tweet("#FIN #OverweighHemingway")
+# tweet("#FIN #OverweighHemingway")
 
