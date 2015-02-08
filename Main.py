@@ -2,58 +2,53 @@
 #authors kayliedehart, alexhersh, alexia7, boltcutter
 
 #Main is executed with a "keyword" argument- the story topic
-import tweepy
-import wordParse
-import checkSimilar
-import sys
+from tweepyFunctions import *
+from checkSimilar import checkSimilar, getBest
+import sys, time
 
 kw = sys.argv[1]
-storyArch = [None]*10
+storyArch = []
 i = 0
 
 ######Story Beginning logic
 #One Tweet: pull in tweet
-first = tweepy.keywordSearch(kw, 1)[0]
+first = keywordSearch(kw, 1)[0]
 #update story
-storyArch[i] = first.text
+storyArch.append(first)
 i++
 #send keyword to checkSimilar for comparison
-checkSimilar...(kw)
-
-
+checkSimilar()
 
 ######Intermediate tweets
-for i <=9:
-	currentTweets = [None]*20
-	if (i <4):
-		#The "Choose Your Own Adventure" Phase: Choose Three
-		currentTweets = tweepy.keywordSearch(kw, 20)
-		#send to parse
-		wordParse.sendScrape(currentTweets)
-		currentText = wordParse.getBest()
+for i in range (1,10) :
+	candidateTweets = []
 
-	else if (i <6)
+	if (i < 4):
+		#The "Choose Your Own Adventure" Phase: Choose Three
+		candidateTweets = keywordSearch(kw, 20)
+		thisTweet = getBest(candidates = candidateTweets, keywords=[kw], sentiment='neutral') # getBest will use tokenizer functions
+
+	else if (i < 6) :
 		##Conflict
 		#Limit to "Negative" tweets: Two
-		currentTweets = tweepy.keywordSearch(kw, 20)
-		#send to parse
-		wordParse.sendScrape(currentTweets)
-		currentText = wordParse.getBest()
-	else
+		candidateTweets = keywordSearch(kw, 20)
+		thisTweet = getBest(candidates = candidateTweets, keywords=[kw], sentiment='negative') # getBest will use tokenizer functions
+
+	else :
 		##Resolution
 		#Limit to "Positive" tweets: Two
-		#send to parse
-		wordParse.sendScrape(currentTweets)
-		currentText = wordParse.getBest()
-	storyArch[i] = currentText
-	i++
+		candidateTweets = keywordSearch(kw, 20)
+		thisTweet = getBest(candidates = candidateTweets, keywords=[kw], sentiment='positive') # getBest will use tokenizer functions
 
-
-#######Story ending logic
-storyArch[i] = "#FIN"
+	storyArch.append(thisTweet)
+	# story words
 
 #Tweet each tweet in 2 minute intervals
-for x in storyArch:
-	tweetOut(x)
+for tweetObj in storyArch :
+	print tweetObj.text
+	#retweet(tweetObj) #dont retweet until it works!
 	wait(1200)
+
+#######Story ending tweet
+tweet("#FIN #OverweighHemingway")
 

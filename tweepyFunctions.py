@@ -4,7 +4,7 @@
 from TwitterSetup import api
 
 # Takes a keyword and a number of results and returns an array of resultant tweet objects
-def keywordSearch(keyword, numResults = 1) :
+def keywordSearch(keyword, numResults) :
 	return api.search(q=keyword, count=numResults)
 
 # pulls text from tweet object
