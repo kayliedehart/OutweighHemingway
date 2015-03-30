@@ -12,4 +12,7 @@ from nltk.corpus import wordnet as wn
 from nltk import word_tokenize as wt
 from nltk.tokenize import RegexpTokenizer
 
+nltk.download('punkt')
+nltk.download('maxent_treebank_pos_tagger')
+
 #useful dependencies used throughout 

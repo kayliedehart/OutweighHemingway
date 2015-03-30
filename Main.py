@@ -2,8 +2,8 @@
 #authors kayliedehart, alexhersh, alexia7, boltcutter
 
 #Main is executed with a "keyword" argument- the story topic
-from tweepyFunctions import *
-import checkSimilar
+from tweepyFunctions import keywordSearch
+from checkSimilar import getBest
 import sys, time, random
 
 kw = sys.argv[1]
@@ -16,10 +16,6 @@ first = keywordSearch(kw, 1)[0]
 #update story
 storyArch.append(first)
 
-string = parser.tokenize(first.text)
-for noun in getNouns(string) :
-	keylist.append(noun)
-
 
 ## add similar words to shopping list
 # for sim in getSimilarWords(kw, 5) :
@@ -31,20 +27,20 @@ for i in range (1,10) :
 
 	if (i < 4):
 		#The "Choose Your Own Adventure" Phase: Choose Three
-		candidateTweets = checkSimilar.keywordSearch(keylist[random.randint(0, len(keylist) - 1)], 20)
-		thisTweet = checkSimilar.getBest(candidates = candidateTweets, keywords=[kw], sentiment='neutral') # getBest will use tokenizer functions
+		candidateTweets = keywordSearch(keylist[random.randint(0, len(keylist) - 1)], 20)
+		thisTweet = getBest(candidates = candidateTweets, keywords=[kw], sentiment='neutral') # getBest will use tokenizer functions
 
-	else if (i < 6) :
+	elif (i < 6) :
 		##Conflict
 		#Limit to "Negative" tweets: Two
-		candidateTweets = checkSimilar.keywordSearch(keylist.pop(random.randint(0, len(keylist) - 1)), 20)
-		thisTweet = checkSimilar.getBest(candidates = candidateTweets, keywords=[kw], sentiment='negative') # getBest will use tokenizer functions
+		candidateTweets = keywordSearch(keylist[random.randint(0, len(keylist) - 1)], 20)
+		thisTweet = getBest(candidates = candidateTweets, keywords=[kw], sentiment='negative') # getBest will use tokenizer functions
 
 	else :
 		##Resolution
 		#Limit to "Positive" tweets: Two
-		candidateTweets = checkSimilar.keywordSearch(keylist.pop(random.randint(0, len(keylist) - 1)), 20)
-		thisTweet = checkSimilar.getBest(candidates = candidateTweets, keywords=[kw], sentiment='positive') # getBest will use tokenizer functions
+		candidateTweets = keywordSearch(keylist[random.randint(0, len(keylist) - 1)], 20)
+		thisTweet = getBest(candidates = candidateTweets, keywords=[kw], sentiment='positive') # getBest will use tokenizer functions
 
 	storyArch.append(thisTweet)
 	# story words

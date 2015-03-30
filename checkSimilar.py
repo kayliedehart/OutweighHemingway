@@ -3,6 +3,7 @@
 
 from dependencies import nltk, wn, wt, lesk
 from nltk.corpus import wordnet_ic
+from wordParse import TokenMaker
 brown_ic = wordnet_ic.ic('ic-brown.dat')
 
 # inputs: synset of target word, tree depth
@@ -47,10 +48,20 @@ def getDisambigSimilars(word, pos, phrase) :
 	disambig = lesk(wt(phrase), word, pos)
 	return getSimilars(disambig)
 
+def getWord(w) :
+	if 'V' in w[1] :
+		return str(w[0]+'.v.01')
+	elif 'JJ' in w[1] :
+		return str(w[0]+'.a.01')
+	elif 'N' in w[1] :
+		return str(w[0]+'.n.01')
+	else :
+		return 'none'
+
 
 def getSimilarity(w1, w2) :
 	# get Resnik Similarity based on brown
-	return max(w1.res_similarity(w2, brown_ic), w2.res_similarity(w1, brown_ic))
+	return max(w1b.res_similarity(w2b, brown_ic), w2b.res_similarity(w1b, brown_ic))
 
 # inputs: candidate sentence list of tokenized words and a keyword array to check similarity against
 # outputs: the candidate tweet object with highest similarity value
@@ -59,17 +70,24 @@ def getSentenceSimilarity(candidates, keywords) :
 
 	# vector of similarities ( candidates[sentence][similarity of word] )
 	similarityVectors = []
-
-	tokenizedCandidates = [ parser.tokenize(candidate) for candidate in candidates ]
-	for candidate in tokenizedCandidates :
-		
+	textCandidates = []
+	for tweet in candidates :
+		textCandidates.append(tweet.text)
+	tokenizedCandidates = TokenMaker(textCandidates)
 
 	for sentence in tokenizedCandidates :
 		simV = [] # temp array for entry into similarityVectors
 		for word in sentence :
+			print word
+			wordd = getWord(word)
+			if wordd == 'none':
+				continue
+
 			simV2 = [] # temp array for sumation entry into simV
+
 			for keyword in keywords :
-				simV2.append( getSimilarity(keyword, word) ) # calculate similarity across all keywords
+				wordd = wn.synset(wordd)
+				simV2.append( getSimilarity(wn.synset(keyword), wordd) ) # calculate similarity across all keywords
 			simV.append(sum(simV2)) # append similarity value into temp array
 
 		similarityVectors.append(simV) # append temp array into similarityVectors

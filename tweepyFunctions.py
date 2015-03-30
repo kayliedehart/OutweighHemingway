@@ -38,5 +38,3 @@ def tweet(text) :
 # retweet the given tweet
 def retweet(tweet) :
 	api.retweet(getIdFromTweet(tweet))
-
-print keywordSearch('dog',10)[4].text
